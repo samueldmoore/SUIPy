@@ -1,0 +1,91 @@
+The prototype version has the configuration data in the Python script. Every element is represented by a Python dictionary, with certain standard keys, as follows:
+
+    example_element = {"type": "example_type",
+                        "name": "example",
+                        "children": []
+                        "properties": {"example_text": "Some text", "size": "200x300", "font": "arial 12", "etc.": "..."}
+                    }
+
+Here, the four keys, "type", "name", "children", and "properties" appear in all element dictionaries. The first two take string values. "children" takes a list, like [child1, child2, etc.]. "properties" takes a dictionary. No "children" or "properties" are required, so either or both of these may be empty (have empty list or dictionary values of [] or {}, respectively).
+
+This package consists of a useful classes to make and manipulate a graphical user interface with minimal effort on the programmer's part.
+
+The first main class is GUIFactory. A GUIFactory object can be used to make a GUI layout and associate functions with the actions of clicking the buttons and switches on the GUI. It makes the layout based on data that can either be hard-coded into a Python script, using Python dictionaries and lists, or be read in from a JSON file and loaded as Python dictionaries and lists using json.loads().
+
+
+The "properties" sub-dictionary is passed to the element builder and contains specifications about that particular element ("example," in this case). The keys recognized by the builder vary from type to type. For example, the ValueEntryBuilder recognizes "show_text" (takes a string) and "default_value" (takes a string or a number). Unrecognized "properties" keys are ignored.
+
+"properties" dictionary keys and values by element type (best viewed with Courier or Monotext):
+
+"type"           |Key                |Default value          |
+=================|===================|=======================|
+"text_box"       |"default_text"     |""                     |
+-----------------|-------------------|-----------------------|
+"text_box"       |"width"[characters]|40                     |
+-----------------|-------------------|-----------------------|
+"text_box"       |"height"[lines]    |5                      |
+-----------------|-------------------|-----------------------|
+"text_box"       |"has_scrollbar"    |False                  |
+-----------------|-------------------|-----------------------|
+"text_line"      |"visible_text"     |"Default text"         |
+-----------------|-------------------|-----------------------|
+"text_line"      |"justification"    |"left"                 |
+-----------------|-------------------|-----------------------|
+"entry"          |"default_value"    |"0"                    |
+-----------------|-------------------|-----------------------|
+"entry"          |"visible_text"     |"New Value Entry"      |
+-----------------|-------------------|-----------------------|
+"entry"          |"width"            |15                     |
+-----------------|-------------------|-----------------------|
+"drop_down"      |"options"          |"Default_Option"       |
+-----------------|-------------------|-----------------------|
+"drop_down"      |"default_option"   |None                   |
+-----------------|-------------------|-----------------------|
+"drop_down"      |"only_selectable"  |True                   |
+-----------------|-------------------|-----------------------|
+"drop_down"      |"action"           |None                   |
+-----------------|-------------------|-----------------------|
+"button"         |"visible_text"     |"Default Button Text"  |
+-----------------|-------------------|-----------------------|
+"button"         |"action"           |"print"                |
+-----------------|-------------------|-----------------------|
+"drop_down_menu" |"visible_text"     |"Menu"                 |
+-----------------|-------------------|-----------------------|
+"menu_command"   |"visible_text"     |"Default Command Label"|
+-----------------|-------------------|-----------------------|
+"menu_command"   |"action"           |"print"                |
+-----------------|-------------------|-----------------------|
+"text_line"      |"visible_text"     |"Default text"         |
+-----------------|-------------------|-----------------------|
+"text_line"      |"visible"          |True                   |
+-----------------|-------------------|-----------------------|
+"window"         |"visible_text"     |"Default Window Title" |
+-----------------|-------------------|-----------------------|
+"window"         |"size_and_position"|"1040x640+0+0"         |
+-----------------|-------------------|-----------------------|
+"window"         |"action"           |"exit"                 |
+-----------------|-------------------|-----------------------|
+"frame"          |"visible_text"     |None                   |
+-----------------|-------------------|-----------------------|
+"frame"          |"height"           |20                     |
+-----------------|-------------------|-----------------------|
+"frame"          |"width"            |50                     |
+-----------------|-------------------|-----------------------|
+"tab"            |"visible_text"     |"Default Tab Label"    |
+-----------------|-------------------|-----------------------|
+[all types]      |"on_new_row"       |False                  |
+-----------------|-------------------|-----------------------|
+[all types]      |"column"           |0 (if "on_new_row")    |
+-----------------|-------------------|-----------------------|
+
+All the elements, except tabs, may take two additional properties that specify their position on the layout: "on_new_row", and "column". The first is just a True/False boolean value controlling whether a new grid row is started for this element. Set this to True for the first row in a layout if a window-level menu bar is specified. It defaults to False. The "column" value is a integer or string representing the number of the grid column in which the element is placed, starting from 0 on the left, counting right. If an particular column is empty, it is invisible. For example, if the first element in a layout is specified at column 1 rather than 0, and no other elements are placed in column 0, all the elements in column 1 would appear to be all the way to the left, as if they were in column 0, because column 0 is empty (invisible).
+
+None of the properties, even the last two, are necessary. The layout will generate without any properties, just using the defaults for each type of element (which are probably not exactly what you want). These are specified in the Builder.create() method for each element.
+
+Some elements, like "type" values "entry", "drop_down", and "button", do not take "children", so the corrosponding list should always be empty, like so: [].
+
+Other elements, like "frame", "tab_binder", can contain "children" that are placed inside them.
+
+The "tab_binder" and "tab" elements are special. A "tab_binder" is designed to only take "tab" children. So please do not try giving a "tab_binder" any other types of children, like "entry" or "drop_down". First make a "tab", and pass any other types as children to the tab. A "tab" is designed to only have a "tab_binder" as a parent. So trying put a "tab" as a child for any type of widget other than a "tab_binder" will throw an error. 
+
+The idea here is that to build a GUI, no coding is necessary. Just plug in the desired elements with their properties as data, and then organize them by putting the predefined child elements that you want to contain in parent elements into the "children" lists of their parents.
