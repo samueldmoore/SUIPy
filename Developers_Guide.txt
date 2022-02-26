@@ -1,9 +1,9 @@
-The prototype version has the configuration data in the script. Every element is represented by a dictionary, with certain standard keys, as follows:
+This framework uses structured configuration data to generate a user interface (UI). Every UI element is represented by a dictionary, with certain standard keys, as follows:
 
-    example_element = {"type": "example_type",
+    example_element = {"type": "text_box",
                         "name": "example",
                         "children": []
-                        "properties": {"example_text": "Some text", "size": "200x300", "font": "arial 12", "etc.": "..."}
+                        "properties": {"example_text": "Some text", "size": "200x300", "etc.": "..."}
                     }
 
 Here, the four keys, "type", "name", "children", and "properties" appear in all element dictionaries. The first two take string values. "children" takes a list, like [child1, child2, etc.]. "properties" takes a dictionary. No "children" or "properties" are required, so either or both of these may be empty (have empty list or dictionary values of [] or {}, respectively).
