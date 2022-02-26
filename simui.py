@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" simui: GUI toolkit for scientific computational simulations
+""" suipy: GUI toolkit for scientific computational simulations
 
 This module contains the classes to implement the factory method design
 pattern to generate a GUI, give it functionality, read its data, manipulate
@@ -1031,7 +1031,7 @@ class TextLineBuilder(GenericBuilder):
                                  required_value=required_value,
                                  event_type=event_type,
                                  action=action,
-                                 visible=initially_visible
+                                 visible=initially_visible,
                                  on_new_row=on_new_row,
                                  column=current_column,
                                  **kwargs)
@@ -2634,7 +2634,7 @@ class GUI:
     def __init__(self, *, builder_keys, GUI_config_data, GUI_action_mapping,
                  GUI_builder_mapping, GUI_binder_mapping, GUI_getter_mapping,
                  GUI_manager_mapping, GUI_pop_up_mapping):
-        """ Take required data and build a GUI using the simui classes.
+        """ Take required data and build a GUI using the suipy classes.
         
         Args:
             builder_keys (dict): All the keys used by the builders and other
