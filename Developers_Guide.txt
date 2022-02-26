@@ -10,7 +10,7 @@ Here, the four keys, "type", "name", "children", and "properties" appear in all 
 
 This package consists of a useful classes to make and manipulate a graphical user interface with minimal effort on the programmer's part.
 
-The first main class is GUIFactory. A GUIFactory object can be used to make a GUI layout and associate functions with the actions of clicking the buttons and switches on the GUI. It makes the layout based on data that can either be hard-coded into a Python script, using Python dictionaries and lists, or be read in from a JSON file and loaded as Python dictionaries and lists using json.loads().
+The first main class is GUIFactory. A GUIFactory object can be used to make a GUI layout and associate functions with the actions of clicking the buttons and switches on the GUI. It makes the layout based on data that can either be hard-coded into a script, using dictionaries and lists, or be read in from a JSON file and loaded as Python dictionaries and lists using json.loads().
 
 
 The "properties" sub-dictionary is passed to the element builder and contains specifications about that particular element ("example," in this case). The keys recognized by the builder vary from type to type. For example, the ValueEntryBuilder recognizes "show_text" (takes a string) and "default_value" (takes a string or a number). Unrecognized "properties" keys are ignored.
