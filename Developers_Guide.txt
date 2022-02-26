@@ -1,4 +1,4 @@
-The prototype version has the configuration data in the Python script. Every element is represented by a Python dictionary, with certain standard keys, as follows:
+The prototype version has the configuration data in the script. Every element is represented by a dictionary, with certain standard keys, as follows:
 
     example_element = {"type": "example_type",
                         "name": "example",
