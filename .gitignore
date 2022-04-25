@@ -1,0 +1,5 @@
+# Tell version control system to ignore cached compiled bytecode.
+.pycache
+
+# Ignore IDE configuration.
+.vscode
