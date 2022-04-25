@@ -2,6 +2,11 @@ To get started building a GUI with SimUI, a basic understanding of how to use th
 
 In the call to the GUIData class, this configuration file and the string keys to the two dictionaries it contains are passed. The keys passed to initialize GUIData must match the keys used in the configuration file for the GUI layout.
 
+The GUI class requires a callback actions mapping. This must contain at least the entry "exit" for the top-level window, specifying the special value None as the callback:
+{
+    "exit": None
+}
+
 Every element is represented by a Python dictionary, with certain keys as specified in the user-provided keys dict, as follows:
 
     example_element = {"type": "example_type",
