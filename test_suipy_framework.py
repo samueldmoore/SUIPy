@@ -96,7 +96,7 @@ KEYS = {
 
 
 
-def test_GUIFactory():
+def test_initialization():
     simple_layout = [{
         "type": "window",
         "name": "window 1",
