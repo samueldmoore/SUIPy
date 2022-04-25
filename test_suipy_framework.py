@@ -62,6 +62,34 @@ POPUPS = {
     "file_save_as": suipy_framework.FileSaveAsPopUp()
 }
 
+# Keys used by builders and other classes to access configuration data
+KEYS = {
+    "config_data_key": "config_data",
+    "name_key": "name",
+    "type_key": "type",
+    "properties_key": "properties",
+    "objects_key": "objects",
+    "children_key": "children",
+    "column_key": "column",
+    "on_new_row_key": "on_new_row",
+    "parameter_type_key": "parameter_type",
+    "parameter_name_key": "parameter_name",
+    "parameter_key": "parameter",
+    "activator_key": "activator",
+    "required_value_key": "required_value",
+    "event_type": "event_type",
+    "justification_key": "justification",
+    "visible_text_key": "visible_text",
+    "width_key": "width",
+    "height_key": "height",
+    "default_text_key": "default_text",
+    "has_scrollbar_key": "has_scrollbar",
+    "options_key": "options",
+    "default_option_key": "default_option",
+    "only_selectable_key": "only_selectable",
+    "widget_key": "widget",
+    "visible_key": "visible",
+}
 # ============================================================================
 
 
