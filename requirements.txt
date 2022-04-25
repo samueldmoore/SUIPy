@@ -1,0 +1,3 @@
+# Simulation User Interface (SUIPy) Framework
+# So far no third-party, nonstandard packages are required.
+# Last tested with interpreter V 3.10.4
