@@ -1,0 +1,11 @@
+# Tell version control system to ignore cached compiled bytecode.
+.pycache
+
+# The version control system should not track a virtual environment
+# Make a very generic pattern to ignore any virtual environments that
+# developers make, based on the common usage of "env" in the name.
+# This can be made more specific in future if needed.
+*env*
+
+# Ignore IDE configuration.
+.vscode
