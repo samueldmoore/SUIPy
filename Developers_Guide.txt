@@ -1,16 +1,18 @@
-This framework uses structured configuration data to generate a user interface (UI). Every UI element is represented by a dictionary, with certain standard keys, as follows:
+To get started building a GUI with SimUI, a basic understanding of how to use the two high-level classes GUI and GUIData is in order. A configuration file is needed which tells the program how to lay out the GUI. It contains the layout and some necessary metadata for the program: a dictionary of key strings for builder classes corresponding to each of the widget types listed in the table below. In the call to the GUIData class, this configuration file and the string keys to the two dictionaries it contains are passed. The keys passed to initialize GUIData must match the keys used in the configuration file for the GUI layout and for the builder mapping, or one must use the default keys defined by GUIData in the configuration file and leave these parameters blank in the call to GUIData. and a dictionary of key strings for the 
 
-    example_element = {"type": "text_box",
+Every element is represented by a Python dictionary, with certain standard keys, as follows:
+
+    example_element = {"type": "example_type",
                         "name": "example",
                         "children": []
-                        "properties": {"example_text": "Some text", "size": "200x300", "etc.": "..."}
+                        "properties": {"example_text": "Some text", "size": "200x300", "font": "arial 12", "etc.": "..."}
                     }
 
 Here, the four keys, "type", "name", "children", and "properties" appear in all element dictionaries. The first two take string values. "children" takes a list, like [child1, child2, etc.]. "properties" takes a dictionary. No "children" or "properties" are required, so either or both of these may be empty (have empty list or dictionary values of [] or {}, respectively).
 
 This package consists of a useful classes to make and manipulate a graphical user interface with minimal effort on the programmer's part.
 
-The first main class is GUIFactory. A GUIFactory object can be used to make a GUI layout and associate functions with the actions of clicking the buttons and switches on the GUI. It makes the layout based on data that can either be hard-coded into a script, using dictionaries and lists, or be read in from a JSON file and loaded as Python dictionaries and lists using json.loads().
+The workhorse class under the hood is GUIFactory. A GUIFactory object can be used to make a GUI layout and associate functions with the actions of clicking the buttons and switches on the GUI. It makes the layout based on data that can either be hard-coded into a Python script, using Python dictionaries and lists, or be read in from a JSON file and loaded as Python dictionaries and lists using json.loads(). GUIFactory is not intended to be called directly by the user, but to be used via higher-level classes: GUI and GUIData.
 
 
 The "properties" sub-dictionary is passed to the element builder and contains specifications about that particular element ("example," in this case). The keys recognized by the builder vary from type to type. For example, the ValueEntryBuilder recognizes "show_text" (takes a string) and "default_value" (takes a string or a number). Unrecognized "properties" keys are ignored.
