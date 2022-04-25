@@ -496,6 +496,8 @@ class WindowBuilder(GenericBuilder):
         window.geometry(size_and_position)
         window.title(visible_text)
         window.protocol("WM_DELETE_WINDOW", kwargs[action])
+        #TODO: Make it optional to provide a special exit function callback
+        # by checking if the "exit" property is provided or not.
 
         spec_properties = {visible_text_key: visible_text,
                            size_and_position_key: size_and_position}
