@@ -127,3 +127,6 @@ def test_initialization():
         )
 
     gui.open()
+
+def test_GUIFactory___init__():
+    suipy_framework.GUIFactory(**KEYS)
