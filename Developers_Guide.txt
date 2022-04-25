@@ -1,6 +1,8 @@
-To get started building a GUI with SimUI, a basic understanding of how to use the two high-level classes GUI and GUIData is in order. A configuration file is needed which tells the program how to lay out the GUI. It contains the layout and some necessary metadata for the program: a dictionary of key strings for builder classes corresponding to each of the widget types listed in the table below. In the call to the GUIData class, this configuration file and the string keys to the two dictionaries it contains are passed. The keys passed to initialize GUIData must match the keys used in the configuration file for the GUI layout and for the builder mapping, or one must use the default keys defined by GUIData in the configuration file and leave these parameters blank in the call to GUIData. and a dictionary of key strings for the 
+To get started building a GUI with SimUI, a basic understanding of how to use the two high-level classes GUI and GUIData is in order. A configuration file is needed which tells the program how to lay out the GUI. It contains the layout and some necessary metadata for the program. This metadata is a dictionary of key strings necessary for the framework to interpret the config data. It Uses the keys specified by the values in this dict to retrieve information from the configuration which could potentially use user-defined keys for attributes like "type" or "children". Most users may use values for this dict as suggested by the hard-coded key-keys (keys to the keys in this dict) in the code. Some keys are used by the builders for specific widgets, and others are more general data access keys used by managing classes.
 
-Every element is represented by a Python dictionary, with certain standard keys, as follows:
+In the call to the GUIData class, this configuration file and the string keys to the two dictionaries it contains are passed. The keys passed to initialize GUIData must match the keys used in the configuration file for the GUI layout.
+
+Every element is represented by a Python dictionary, with certain keys as specified in the user-provided keys dict, as follows:
 
     example_element = {"type": "example_type",
                         "name": "example",
@@ -8,7 +10,9 @@ Every element is represented by a Python dictionary, with certain standard keys,
                         "properties": {"example_text": "Some text", "size": "200x300", "font": "arial 12", "etc.": "..."}
                     }
 
-Here, the four keys, "type", "name", "children", and "properties" appear in all element dictionaries. The first two take string values. "children" takes a list, like [child1, child2, etc.]. "properties" takes a dictionary. No "children" or "properties" are required, so either or both of these may be empty (have empty list or dictionary values of [] or {}, respectively).
+Here, the four keys, "type", "name", "children", and "properties" would be in the keys dict at the keys "type_key", "name_key", "children_key", and "properties_key" respectively, and these would be in all element dictionaries in the configuration data.
+
+The first two take string values. "children" takes a list, like [child1, child2, etc.]. "properties" takes a dictionary. No "children" or "properties" are required, so either or both of these may be empty (have empty list or dictionary values of [] or {}, respectively).
 
 This package consists of a useful classes to make and manipulate a graphical user interface with minimal effort on the programmer's part.
 
@@ -17,7 +21,7 @@ The workhorse class under the hood is GUIFactory. A GUIFactory object can be use
 
 The "properties" sub-dictionary is passed to the element builder and contains specifications about that particular element ("example," in this case). The keys recognized by the builder vary from type to type. For example, the ValueEntryBuilder recognizes "show_text" (takes a string) and "default_value" (takes a string or a number). Unrecognized "properties" keys are ignored.
 
-"properties" dictionary keys and values by element type (best viewed with Courier or Monotext):
+"properties" dictionary keys and values by element type (best viewed with Courier or Monotext), where the value under "type" is the str value hardcoded in the GUIData and other classes to recognize widgets of that type (remember that "type" is only a suggested value for "type_key" in the user-supplied keys dict; you may want to refer to this attribute as "breed", "category", you name it -- all you need to do to use your custom key is put it in the slot of the keys dict that is keyed by the str "type_key"):
 
 "type"           |Key                |Default value          |
 =================|===================|=======================|
