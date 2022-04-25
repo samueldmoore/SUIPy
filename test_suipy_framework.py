@@ -115,5 +115,15 @@ def test_GUIFactory():
         "exit": None
     }
 
-    gui = suipy_framework.GUI(GUI_config_data=simple_layout, builder_keys=KEYS, GUI_builder_mapping=BUILDERS, GUI_binder_mapping=BINDERS, GUI_getter_mapping=GETTERS, GUI_pop_up_mapping=POPUPS, GUI_manager_mapping=MANAGERS, GUI_action_mapping=simple_actions)
+    gui = suipy_framework.GUI(
+        builder_keys=KEYS,
+        GUI_config_data=simple_layout,
+        GUI_builder_mapping=BUILDERS,
+        GUI_binder_mapping=BINDERS,
+        GUI_getter_mapping=GETTERS,
+        GUI_pop_up_mapping=POPUPS,
+        GUI_manager_mapping=MANAGERS,
+        GUI_action_mapping=simple_actions
+        )
+
     gui.open()
