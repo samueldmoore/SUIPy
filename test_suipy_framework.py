@@ -126,7 +126,7 @@ def test_initialization():
         GUI_action_mapping=simple_actions
         )
 
-    gui.open()
+    #gui.open()
 
 def test_GUIFactory___init__():
     suipy_framework.GUIFactory(**KEYS)
