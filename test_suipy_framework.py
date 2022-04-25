@@ -76,9 +76,11 @@ KEYS = {
     "parameter_name_key": "parameter_name",
     "parameter_key": "parameter",
     "activator_key": "activator",
+    "action_key": "action",
     "required_value_key": "required_value",
-    "event_type": "event_type",
+    "event_type_key": "event_type",
     "justification_key": "justification",
+    "size_and_position_key": "size_and_position",
     "visible_text_key": "visible_text",
     "width_key": "width",
     "height_key": "height",
@@ -93,8 +95,25 @@ KEYS = {
 # ============================================================================
 
 
-def prepare_keys():
-    suipy_framework.GUIData()
 
 def test_GUIFactory():
-    suipy_framework.GUIFactory()
+    simple_layout = [{
+        "type": "window",
+        "name": "window 1",
+        "children": [
+            {
+                "type": "text_line",
+                "name": "text_line 1",
+                "children": [],
+                "properties": {"visible_text": "Some text"}
+                }
+            ],
+        "properties": {}
+        }]
+
+    simple_actions = {
+        "exit": None
+    }
+
+    gui = suipy_framework.GUI(GUI_config_data=simple_layout, builder_keys=KEYS, GUI_builder_mapping=BUILDERS, GUI_binder_mapping=BINDERS, GUI_getter_mapping=GETTERS, GUI_pop_up_mapping=POPUPS, GUI_manager_mapping=MANAGERS, GUI_action_mapping=simple_actions)
+    gui.open()
