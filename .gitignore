@@ -1,5 +1,6 @@
 # Tell version control system to ignore cached compiled bytecode.
-.pycache
+__pycache__
+.pytest_cache
 
 # The version control system should not track a virtual environment
 # Make a very generic pattern to ignore any virtual environments that
