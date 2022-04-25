@@ -1,0 +1,2 @@
+# This is a list of dependencies for building and testing the package.
+pytest==7.0.0
