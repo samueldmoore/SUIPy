@@ -128,5 +128,9 @@ def test_initialization():
 
     #gui.open()
 
+# For the __init__ method in suipy_framework.GUIFactory, there is no explicit
+# conditional logic, so only one test case is needed to exercise all the
+# possibilities. This doesn't really test anything since the passed-in KEYS are
+# not directly retrievable.
 def test_GUIFactory___init__():
     suipy_framework.GUIFactory(**KEYS)
