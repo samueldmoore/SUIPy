@@ -227,3 +227,8 @@ def test_GUIFactory_locate_element(config_GUIFactory_locate_element):
 # 2.01 |        T*      |
 # 2.02 |        F*      |
 #      |________________|
+def test_GUIFactory_build_element():
+    """Test that the GUIFactory._build_element method properly passes the con-
+    figuration data to the builder, using a mocked builder.
+    """
+    pass
