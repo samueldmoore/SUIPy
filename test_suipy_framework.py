@@ -6,7 +6,7 @@ logic criteria like correlated active clause coverage.
 
 """
 
-import suipy_framework
+import suipy_framework, pytest
 
 # ============================================================================
 # Hard-coded test fixture key-class mappings to avoid file I/O
@@ -142,3 +142,59 @@ def test_GUIFactory___init__():
 def test_GUIFactory_register_builder():
     suipy_framework.GUIFactory(**KEYS).register_builder(
         "window", BUILDERS["window"])
+
+@pytest.fixture(params=[
+    (False, 0, 0),
+    (True, 1, 0),
+    ("False", 0, 0),
+    ("True", 1, 0),
+    ("No", 0, 0),
+    ("Yes", 1, 0)])
+def config_GUIFactory_locate_element(request):
+    """Set up a simple widget layout to test the _locate_element function with.
+
+    :param request:
+        object from fixture allowing access to fixture param for this run
+    :return:
+        tuple containing
+            [0] the layout customized by whether the widget's on a new row or
+            not
+            [1] the bool telling if the widget's on a new row
+            [2] the row number to expect
+            [3] the column number to expect
+    """
+    layout = {
+        KEYS["type_key"]: "text_line",
+        KEYS["name_key"]: "test_text",
+        KEYS["children_key"]: [],
+        KEYS["properties_key"]: {
+            KEYS["on_new_row_key"]: request.param[0]
+        }}
+    # Use the param for this run to customize the layout (new row or not)
+
+    return (layout, request.param[0], request.param[1], request.param[2])
+
+# GUIFactory._locate_element
+#
+# The following is an analysis of the if-else conditional, showing the needed
+# clause values to make the denoted "active clause" the determining one in
+# control of the entire predicate, where the determining clause is marked with
+# an asterick *
+#    _________________________________________________________________
+#    | (new_row == "True") | (new_row == True) | (new_row == "True") |
+#    |        True*        |       False       |        False        |
+#    |        False*       |       False       |        False        |
+#    |        False        |       True*       |        False        |
+#    |        False        |       False*      |        False        |
+#    |        False        |       False       |        True*        |
+#    |        False        |       False       |        False*       |
+#    |_____________________|___________________|_____________________|
+def test_GUIFactory_locate_element(config_GUIFactory_locate_element):
+    actual = suipy_framework.GUIFactory(**KEYS)._locate_element(
+        config_GUIFactory_locate_element[0])
+    expected = (
+        config_GUIFactory_locate_element[1],
+        config_GUIFactory_locate_element[2],
+        config_GUIFactory_locate_element[3])
+
+    assert actual == expected
