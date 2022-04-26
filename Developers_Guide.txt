@@ -91,7 +91,7 @@ The "properties" sub-dictionary is passed to the element builder and contains sp
 
 All the elements, except tabs, may take two additional properties that specify their position on the layout: "on_new_row", and "column". The first is just a True/False boolean value controlling whether a new grid row is started for this element. Set this to True for the first row in a layout if a window-level menu bar is specified. It defaults to False. The "column" value is a integer or string representing the number of the grid column in which the element is placed, starting from 0 on the left, counting right. If an particular column is empty, it is invisible. For example, if the first element in a layout is specified at column 1 rather than 0, and no other elements are placed in column 0, all the elements in column 1 would appear to be all the way to the left, as if they were in column 0, because column 0 is empty (invisible).
 
-None of the properties, even the last two, are necessary. The layout will generate without any properties, just using the defaults for each type of element (which are probably not exactly what you want). These are specified in the Builder.create() method for each element.
+None of the properties, even the last two, are necessary. The layout will generate without any properties, just using the defaults for each type of element (which are probably not exactly what you want). These are specified in the Builder.__call__() method for each element.
 
 Some elements, like "type" values "entry", "drop_down", and "button", do not take "children", so the corrosponding list should always be empty, like so: [].
 
