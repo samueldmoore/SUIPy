@@ -186,15 +186,17 @@ def config_GUIFactory_locate_element(request):
 # clause values to make the denoted "active clause" the determining one in
 # control of the entire predicate, where the determining clause is marked with
 # an asterick *
-#    _________________________________________________________________
-#    | (new_row == "True") | (new_row == True) | (new_row == "True") |
-#    |        True*        |       False       |        False        |
-#    |        False*       |       False       |        False        |
-#    |        False        |       True*       |        False        |
-#    |        False        |       False*      |        False        |
-#    |        False        |       False       |        True*        |
-#    |        False        |       False       |        False*       |
-#    |_____________________|___________________|_____________________|
+#
+#          1: Test requirements for GUIFactory._locate_element
+#________________________________________________________________________
+#  TR  | (new_row == "True") | (new_row == True) | (new_row == "True") |
+# 1.01 |        True*        |       False       |        False        |
+# 1.02 |        False*       |       False       |        False        |
+# 1.03 |        False        |       True*       |        False        |
+# 1.04 |        False        |       False*      |        False        |
+# 1.05 |        False        |       False       |        True*        |
+# 1.06 |        False        |       False       |        False*       |
+# 1.07 |_____________________|___________________|_____________________|
 def test_GUIFactory_locate_element(config_GUIFactory_locate_element):
     actual = suipy_framework.GUIFactory(**KEYS)._locate_element(
         config_GUIFactory_locate_element[0])
