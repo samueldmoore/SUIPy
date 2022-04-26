@@ -15,7 +15,7 @@ Every element is represented by a Python dictionary, with certain keys as specif
                         "properties": {"example_text": "Some text", "size": "200x300", "font": "arial 12", "etc.": "..."}
                     }
 
-Here, the four keys, "type", "name", "children", and "properties" would be in the keys dict at the keys "type_key", "name_key", "children_key", and "properties_key" respectively, and these would be in all element dictionaries in the configuration data.
+Here, the four keys, "type", "name", "children", and "properties" would be in the keys dict at the keys "type_key", "name_key", "children_key", and "properties_key" respectively. "type", "name", "children", "properties" (or equivalent) would be in all element dictionaries in the configuration data.
 
 The first two take string values. "children" takes a list, like [child1, child2, etc.]. "properties" takes a dictionary. No "children" or "properties" are required, so either or both of these may be empty (have empty list or dictionary values of [] or {}, respectively).
 
