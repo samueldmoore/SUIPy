@@ -128,6 +128,12 @@ def test_initialization():
 
     #gui.open()
 
+#==============================================================================
+# Logic Coverage Test Requirements and Tests
+#------------------------------------------------------------------------------
+# GUIFactory
+#------------------------------------------------------------------------------
+
 # For the __init__ method in suipy_framework.GUIFactory, there is no explicit
 # conditional logic, so only one test case is needed to exercise all the
 # possibilities. This doesn't really test anything since the passed-in KEYS are
