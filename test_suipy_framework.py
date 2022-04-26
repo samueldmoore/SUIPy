@@ -214,3 +214,16 @@ def test_GUIFactory_locate_element(config_GUIFactory_locate_element):
         config_GUIFactory_locate_element[3])
 
     assert actual == expected
+
+# GUIFactory._build_element
+#
+# The only predicate is part of the error handling logic. A single clause
+# determines the result in all cases.
+#
+#  2: Test requirements
+#  for GUIFactory._build_element
+#________________________
+#  TR  |  (not builder) |
+# 2.01 |        T*      |
+# 2.02 |        F*      |
+#      |________________|
