@@ -6,7 +6,7 @@ logic criteria like correlated active clause coverage.
 
 """
 
-import suipy_framework, pytest
+import suipy_framework, pytest, unittest.mock
 
 # ============================================================================
 # Hard-coded test fixture key-class mappings to avoid file I/O
@@ -109,9 +109,12 @@ SIMPLE_LAYOUT = [{
     }]
 
 SIMPLE_ACTIONS = {
-    "exit": None
+    "exit": None,
+    "print": None
 }
 
+MOCK_TYPE = "mock_type"
+# This made-up type is used in config_GUIFactory_build_element.
 
 def test_initialization():
 
@@ -227,8 +230,84 @@ def test_GUIFactory_locate_element(config_GUIFactory_locate_element):
 # 2.01 |        T*      |
 # 2.02 |        F*      |
 #      |________________|
-def test_GUIFactory_build_element():
-    """Test that the GUIFactory._build_element method properly passes the con-
-    figuration data to the builder, using a mocked builder.
+@pytest.fixture(params=[
+    MOCK_TYPE, # 2.01
+    "wacko"])           # 2.02
+# "wacko" is an invalid widget type without a registered builder
+def config_GUIFactory_build_element(request):
+    """Generate a fixture for the build_element test using a real type of
+    element and a fake for different instances, registering a mock_builder
+    under the real "type" in each case.
+
+    :param request:
+        object from fixture allowing access to fixture param for this run
+    :return:
+        a tuple containing
+            [0] arguments to pass to _build_element, including the config dict
+            [1] the factory object with a mocked builder registered under
+            MOCK_TYPE
+            [2] arguments to expect passed to the mocked builder object
+            [3] the mocked builder object
     """
-    pass
+    factory_fixture = suipy_framework.GUIFactory(**KEYS)
+
+    mock_builder = unittest.mock.Mock()
+
+    config_fixture = {
+        KEYS["type_key"]: request.param,
+        KEYS["name_key"]: "some_widget",
+        KEYS["children_key"]: [],
+        KEYS["properties_key"]: {}
+    }
+
+    build_args = dict(
+        element_config_data=config_fixture,
+        action_mapping=SIMPLE_ACTIONS,
+        parent=None,
+        row=0,
+        default_column=0,
+        level=0,
+    )
+    # These are the keyword arguments that _build_element takes.
+
+    builder_call__args = dict(
+        current_row=build_args["row"],
+        current_column=factory_fixture._locate_element(
+            element_config_data=config_fixture,
+            row=build_args["row"],
+            default_column=build_args["default_column"])[2],
+        level=build_args["level"],
+        parent=build_args["parent"],
+        **config_fixture,
+        **build_args["action_mapping"],
+        **KEYS
+    )
+    # These are the arguments expected to be passed to the builder.
+
+    factory_fixture.register_builder(MOCK_TYPE, mock_builder)
+    # For all iterations, register the mock builder under the valid key
+    # used in config_fixture in only one instance of this fixture.
+    # This makes the builder findable in one instance of the fixture but not
+    # in the other.
+
+    return (build_args, factory_fixture, mock_builder, builder_call__args)
+
+def test_GUIFactory_build_element(config_GUIFactory_build_element):
+    """Test that the GUIFactory._build_element method properly passes the con-
+    figuration data to the (mocked) builder when correctly registered.
+    """
+
+    if (config_GUIFactory_build_element[0]["element_config_data"][
+            KEYS["type_key"]] == MOCK_TYPE):
+        # The widget "type" in the configuration should match the "type" a
+        # builder was registered under
+        config_GUIFactory_build_element[1]._build_element(
+            **config_GUIFactory_build_element[0])
+    
+        config_GUIFactory_build_element[2].assert_called_once_with(
+            **config_GUIFactory_build_element[3])
+
+    else:
+        with pytest.raises(ValueError):
+            config_GUIFactory_build_element[1]._build_element(
+            **config_GUIFactory_build_element[0])
