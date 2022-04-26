@@ -1499,6 +1499,8 @@ class GUIFactory:
 
         self._data_keys = kwargs
 
+    #TODO: Make a way to retrieve the keys and builders
+    
     def register_builder(self, type_key, builder):
         """ Take a type key and associate a builder with it internally.
 
