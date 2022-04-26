@@ -137,19 +137,22 @@ def test_initialization():
 # GUIFactory
 #------------------------------------------------------------------------------
 
+def get_GUIFactory_fixture():
+    return suipy_framework.GUIFactory(**KEYS)
+
 # For the __init__ method in suipy_framework.GUIFactory, there is no explicit
 # conditional logic, so only one test case is needed to exercise all the
 # possibilities. This doesn't really test anything since the passed-in KEYS are
 # not directly retrievable.
 def test_GUIFactory___init__():
-    suipy_framework.GUIFactory(**KEYS)
+    get_GUIFactory_fixture()
 
 # GUIFactory.register_builder
 #
 # There is also no explicit conditional logic, just a key-value assignment.
 # Only one test seems needed.
 def test_GUIFactory_register_builder():
-    suipy_framework.GUIFactory(**KEYS).register_builder(
+    get_GUIFactory_fixture().register_builder(
         "window", BUILDERS["window"])
 
 # GUIFactory._locate_element
@@ -249,7 +252,7 @@ def config_GUIFactory_build_element(request):
             [2] arguments to expect passed to the mocked builder object
             [3] the mocked builder object
     """
-    factory_fixture = suipy_framework.GUIFactory(**KEYS)
+    factory_fixture = get_GUIFactory_fixture()
 
     mock_builder = unittest.mock.Mock()
 
@@ -303,7 +306,7 @@ def test_GUIFactory_build_element(config_GUIFactory_build_element):
         # builder was registered under
         config_GUIFactory_build_element[1]._build_element(
             **config_GUIFactory_build_element[0])
-    
+
         config_GUIFactory_build_element[2].assert_called_once_with(
             **config_GUIFactory_build_element[3])
 
@@ -311,3 +314,18 @@ def test_GUIFactory_build_element(config_GUIFactory_build_element):
         with pytest.raises(ValueError):
             config_GUIFactory_build_element[1]._build_element(
             **config_GUIFactory_build_element[0])
+
+# GUIFactory.create
+#
+# The only predicate is part of the error handling logic. A single clause
+# determines the result in all cases.
+#
+#  3: Test requirements
+#  for GUIFactory.create
+#_______________________________________________
+#  TR  |  (more elements in configuration_data) |
+# 3.01 |                    T*                  |
+# 3.02 |                    F*                  |
+#      |________________________________________|
+def setup_test_GUIFactory_create():
+    factory_fixture = get_GUIFactory_fixture()
