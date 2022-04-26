@@ -94,36 +94,36 @@ KEYS = {
 }
 # ============================================================================
 
+SIMPLE_LAYOUT = [{
+    "type": "window",
+    "name": "window 1",
+    "children": [
+        {
+            "type": "text_line",
+            "name": "text_line 1",
+            "children": [],
+            "properties": {"visible_text": "Some text"}
+            }
+        ],
+    "properties": {}
+    }]
+
+SIMPLE_ACTIONS = {
+    "exit": None
+}
 
 
 def test_initialization():
-    simple_layout = [{
-        "type": "window",
-        "name": "window 1",
-        "children": [
-            {
-                "type": "text_line",
-                "name": "text_line 1",
-                "children": [],
-                "properties": {"visible_text": "Some text"}
-                }
-            ],
-        "properties": {}
-        }]
-
-    simple_actions = {
-        "exit": None
-    }
 
     gui = suipy_framework.GUI(
         builder_keys=KEYS,
-        GUI_config_data=simple_layout,
+        GUI_config_data=SIMPLE_LAYOUT,
         GUI_builder_mapping=BUILDERS,
         GUI_binder_mapping=BINDERS,
         GUI_getter_mapping=GETTERS,
         GUI_pop_up_mapping=POPUPS,
         GUI_manager_mapping=MANAGERS,
-        GUI_action_mapping=simple_actions
+        GUI_action_mapping=SIMPLE_ACTIONS
         )
 
     #gui.open()
