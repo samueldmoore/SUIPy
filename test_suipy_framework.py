@@ -134,3 +134,9 @@ def test_initialization():
 # not directly retrievable.
 def test_GUIFactory___init__():
     suipy_framework.GUIFactory(**KEYS)
+
+# For the GUIFactory.register_builder method, there is also no explicit
+# conditional logic, just a key-value assignment. Only one test seems needed.
+def test_GUIFactory_register_builder():
+    suipy_framework.GUIFactory(**KEYS)._register_builder(
+        "window", BUILDERS["window"])
