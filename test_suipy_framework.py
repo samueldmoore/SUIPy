@@ -198,6 +198,14 @@ def config_GUIFactory_locate_element(request):
     return (layout, request.param[0], request.param[1], request.param[2])
 
 def test_GUIFactory_locate_element(config_GUIFactory_locate_element):
+    """Use the config_GUIFactory_locate_element fixture to test the function
+    GUIFactory._locate_element by passing it different settings for on_new_row
+    and making sure that the resulting placement matches that specified.
+
+    :param config_GUIFactory_locate_element:
+        the fixture function generating different layouts, some on_new_row
+        and others not
+    """
     actual = suipy_framework.GUIFactory(**KEYS)._locate_element(
         config_GUIFactory_locate_element[0])
     expected = (
