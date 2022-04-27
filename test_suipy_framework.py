@@ -6,6 +6,7 @@ logic criteria like correlated active clause coverage.
 
 """
 
+import tkinter
 import suipy_framework, pytest, unittest.mock, random
 
 # ============================================================================
@@ -490,3 +491,35 @@ class RandomStringGenerator:
 #------------------------------------------------------------------------------
 # Tests for TextLineBuilder
 #------------------------------------------------------------------------------
+@pytest.fixture
+def setup_test_textlinebuilder():
+    window_fixture = tkinter.Tk()
+    fuzzer = RandomStringGenerator()
+    base_config = {
+        KEYS["type_key"]: "text",
+        KEYS["name_key"]: "random_widget",
+        KEYS["properties_key"]: {},
+        KEYS["children_key"]: []
+    }
+    return (base_config, window_fixture, fuzzer)
+
+def test_textlinebuilder(setup_test_textlinebuilder):
+    widget_config = setup_test_textlinebuilder[0]
+    builder_fixture = suipy_framework.TextLineBuilder()
+
+    for i in range(10000):
+        random_key = setup_test_textlinebuilder[2].get_random_str(length=10)
+        random_value = setup_test_textlinebuilder[2].get_random_str(length=10)
+
+        widget_config[KEYS["properties_key"]][
+            random_key] = random_value
+    # Put a bunch of random properties in the textlinebuilder's input
+
+    builder_fixture(
+        **widget_config,
+        parent=setup_test_textlinebuilder[1],
+        current_row=0,
+        current_column=0,
+        **KEYS)
+    # Call the builder with that data.
+    # If there's an exception, the test fails.
