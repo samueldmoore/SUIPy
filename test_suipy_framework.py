@@ -442,16 +442,44 @@ def test_GUIFactory_create(setup_test_GUIFactory_create):
 # Fuzzing Tests
 #------------------------------------------------------------------------------
 class RandomStringGenerator:
+    """This class provides methods for getting reproducibly pseudo-random
+    strings of various lengths
+    """
     def __init__(self, randomness_seed=1234567890):
+        """Instantiate an instance using the given seed for the randomness.
+        :param randomness_seed:
+            the value to seed the random generator with, defaulting to a hard-
+            coded int for reproducibility.
+        :return:
+            an instance ready to start generating pseudo-random strings
+        """
         random.seed(randomness_seed)
 
     def get_random_char(self, code_point_range=CHAR_CODE_RANGE):
+        """Generate a random 1-length consisting of a single codepoint in the
+        given interval, inclusive.
+        :param code_point_range:
+            the interval over which to generate the code point
+        :return:
+            a pseudo-random char in the interval
+        """
 
         random_code_point = random.randint(*code_point_range)
 
         return chr(random_code_point)
 
     def get_random_str(self, length=2, code_point_range=CHAR_CODE_RANGE):
+        """Generate a random, arbitrary-length string with characters possibly
+        ranging from that corresponding to the lowest code point in the given
+        range up to and including that corresponding to the highest code point
+        in the range.
+        :param length:
+            the length of string to generate
+        :param code_point_range:
+            the range of code points to possibly include in the returned string
+        :return:
+            string object of given length consisting of pseudo-random
+            characters"""
         random_string = ""
 
         for i in range(length):
