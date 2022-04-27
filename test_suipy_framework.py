@@ -85,6 +85,7 @@ KEYS = {
     "width_key": "width",
     "height_key": "height",
     "default_text_key": "default_text",
+    "default_value_key": "default_value",
     "has_scrollbar_key": "has_scrollbar",
     "options_key": "options",
     "default_option_key": "default_option",
@@ -110,7 +111,7 @@ SIMPLE_LAYOUT = [{
 
 SIMPLE_ACTIONS = {
     "exit": None,
-    "print": None
+    "test_callback": lambda: print("Test callback print")
 }
 
 MOCK_TYPE = "mock_type"
@@ -254,7 +255,11 @@ def config_GUIFactory_build_element(request):
     """
     factory_fixture = get_GUIFactory_fixture()
 
-    mock_builder = unittest.mock.Mock()
+    mock_builder = unittest.mock.Mock(spec=suipy_framework.ValueEntryBuilder)
+    # For some reason, mocking suipy_framework.TextLineBuilder passes,
+    # but mocking suipy_framework.ValueEntryBuilder,
+    # suipy_framework.ButtonBuilder, and suipy_framework.DropDownBuilder
+    # doesn't pass. I am not sure if it's a bug in my test or suipy_framework.
 
     config_fixture = {
         KEYS["type_key"]: request.param,
@@ -273,7 +278,7 @@ def config_GUIFactory_build_element(request):
     )
     # These are the keyword arguments that _build_element takes.
 
-    builder_call__args = dict(
+    builder__call__args = dict(
         current_row=build_args["row"],
         current_column=factory_fixture._locate_element(
             element_config_data=config_fixture,
@@ -293,7 +298,7 @@ def config_GUIFactory_build_element(request):
     # This makes the builder findable in one instance of the fixture but not
     # in the other.
 
-    return (build_args, factory_fixture, mock_builder, builder_call__args)
+    return (build_args, factory_fixture, mock_builder, builder__call__args)
 
 def test_GUIFactory_build_element(config_GUIFactory_build_element):
     """Test that the GUIFactory._build_element method properly passes the con-
@@ -317,8 +322,11 @@ def test_GUIFactory_build_element(config_GUIFactory_build_element):
 
 # GUIFactory.create
 #
-# The only predicate is part of the error handling logic. A single clause
-# determines the result in all cases.
+# There are no explicit predicates, but a loop can be thought of as having a
+# single predicate that tests whether there are remaining iterables.
+# This test exercises this loop, evaluating this invisible predicate for when
+# there are and when there are remaining elements and for when not. The final
+# loop iteration satisfies the latter test requirement.
 #
 #  3: Test requirements
 #  for GUIFactory.create
@@ -327,5 +335,104 @@ def test_GUIFactory_build_element(config_GUIFactory_build_element):
 # 3.01 |                    T*                  |
 # 3.02 |                    F*                  |
 #      |________________________________________|
+@pytest.fixture()
 def setup_test_GUIFactory_create():
+    """Prepare configuration data, a GUIFactory fixture, and a set of mocked
+    builders for the test of GUIFactory.create
+    :return:
+        A tuple containing:
+            [0] configuration data
+            [1] list of two-tuples, each consisting of:
+                [0] keyword arguments (kwargs) to be passed to a builder
+                [1] mocked builder corresponding to those kwargs
+            [2] GUIFactory instance registered to use the mocked builders in
+            return tuple value [1]
+    """
     factory_fixture = get_GUIFactory_fixture()
+
+    widget1_config = {
+        KEYS["type_key"]: "text_line",
+        KEYS["name_key"]: "some_text",
+        KEYS["children_key"]: [],
+        KEYS["properties_key"]: {KEYS["visible_text_key"]: "Test text"}
+    }
+    builder1__call__args = dict(
+        current_row=0,
+        current_column=0,
+        level=0,
+        parent=None,
+        **widget1_config,
+        **SIMPLE_ACTIONS,
+        **KEYS
+    )
+    widget2_config = {
+        KEYS["type_key"]: "entry",
+        KEYS["name_key"]: "some_entry",
+        KEYS["children_key"]: [],
+        KEYS["properties_key"]: {KEYS["default_value_key"]: 2,
+                                 KEYS["on_new_row_key"]: True}
+    }
+    builder2__call__args = dict(
+        current_row=1,
+        current_column=0,
+        level=0,
+        parent=None,
+        **widget2_config,
+        **SIMPLE_ACTIONS,
+        **KEYS
+    )
+    widget3_config = {
+        KEYS["type_key"]: "button",
+        KEYS["name_key"]: "some_button",
+        KEYS["children_key"]: [],
+        KEYS["properties_key"]: {KEYS["action_key"]: "test_callback"}
+    }
+    builder3__call__args = dict(
+        current_row=1,
+        current_column=1,
+        level=0,
+        parent=None,
+        **widget3_config,
+        **SIMPLE_ACTIONS,
+        **KEYS
+    )
+    # Can get away with parent=None for these normally-windowed widget types
+    # because a mock is used, so no real widget is made
+
+    config_fixture = [widget1_config, widget2_config, widget3_config]
+
+    builder1_mock = unittest.mock.Mock(spec=suipy_framework.TextLineBuilder)
+    builder2_mock = unittest.mock.Mock(spec=suipy_framework.ValueEntryBuilder)
+    builder3_mock = unittest.mock.Mock(spec=suipy_framework.ButtonBuilder)
+    # 
+
+    factory_fixture.register_builder(widget1_config[KEYS["type_key"]], builder1_mock)
+    factory_fixture.register_builder(widget2_config[KEYS["type_key"]], builder2_mock)
+    factory_fixture.register_builder(widget3_config[KEYS["type_key"]], builder3_mock)
+
+
+    args_and_mocks = [(builder1__call__args, builder1_mock), # 3.01
+                      (builder2__call__args, builder2_mock),
+                      (builder3__call__args, builder3_mock)] # 3.02
+                      # (final iteration of loop in GUIFactory.create)
+
+    return (config_fixture, args_and_mocks, factory_fixture)
+
+def test_GUIFactory_create(setup_test_GUIFactory_create):
+    """Test the loop in GUIFactory.create by passing it a list of widget
+    configurations to iterate through.
+
+    :param setup_test_GUIFactory_create:
+        fixture instance with configuration data, mocked builders, and
+        a mocked GUIFactory
+    """
+    setup_test_GUIFactory_create[2].create(
+        configuration_data=setup_test_GUIFactory_create[0],
+        action_mapping=SIMPLE_ACTIONS,
+        inventory_list=[],
+        parent_widget=None,
+        level=0)
+
+    for args_for_builder in setup_test_GUIFactory_create[1]:
+        args_for_builder[1].assert_called_once_with(**args_for_builder[0])
+
