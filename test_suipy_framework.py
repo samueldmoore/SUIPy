@@ -119,6 +119,7 @@ MOCK_TYPE = "mock_type"
 # This made-up type is used in config_GUIFactory_build_element.
 
 CHAR_CODE_RANGE = (0, 1114111)
+MAX_FUZZED_VALUES = 10000
 
 def test_initialization():
 
@@ -543,7 +544,7 @@ def test_textlinebuilder(setup_test_textlinebuilder):
 
         widget_config[KEYS["properties_key"]][
             random_key] = random_value
-    # Put a bunch of random properties in the textlinebuilder's input
+    # Put a bunch of random properties in the TextLineBuilder's input
 
     builder_fixture(
         **widget_config,
@@ -555,5 +556,43 @@ def test_textlinebuilder(setup_test_textlinebuilder):
     # If there's an exception, the test fails.
 
 #------------------------------------------------------------------------------
-# Tests for TextLineBuilder
+# Tests for ValueEntryBuilder
 #------------------------------------------------------------------------------
+
+@pytest.fixture
+def setup_test_valueentrybuilder(setup_test_builder):
+    """Prepare to test the ValueEntryBuilder class by initializing a context
+    for the widget and preparing a configuration data spec to pass the builder
+    :return:
+        tuple of
+            [0] the configuration data to pass ValueEntryBuilder
+            [1] the window as returned by setup_test_builder
+            [2] the RandomStringGenerator as returned by setup_test_builder
+    """
+    entry_config = setup_test_builder[0]
+
+    entry_config[KEYS["type_key"]] = "entry"
+    return (entry_config, setup_test_builder[1], setup_test_builder[2])
+
+def test_valueentrybuilder(setup_test_valueentrybuilder):
+    """Pass random property key-value pairs into the ValueEntryBuilder.__call__
+    method in the properties keyword argument
+    :param setup_test_valueentrybuilder:
+        the fixture instance to do this test with
+    """
+    for i in range(MAX_FUZZED_VALUES):
+        random_key = setup_test_valueentrybuilder[2].get_random_str(length=10)
+        random_value = setup_test_valueentrybuilder[2].get_random_str(length=10)
+
+        setup_test_valueentrybuilder[0][KEYS["properties_key"]][
+            random_key] = random_value
+    # Put a bunch of random properties in the ValueEntryBuilder's input
+
+    suipy_framework.ValueEntryBuilder()(
+        **setup_test_valueentrybuilder[0],
+        parent=setup_test_valueentrybuilder[1],
+        current_row=0,
+        current_column=0,
+        **KEYS)
+    # Call the builder with that data.
+    # If there's an exception, the test fails.
