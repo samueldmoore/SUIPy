@@ -644,3 +644,50 @@ def test_buttonbuilder(setup_test_buttonbuilder):
         **KEYS)
     # Call the builder with that data.
     # If there's an exception, the test fails.
+
+#------------------------------------------------------------------------------
+# Tests for DropDownBuilder
+#------------------------------------------------------------------------------
+
+@pytest.fixture
+def setup_test_dropdownbuilder(setup_test_builder):
+    """Prepare to test the DropDownBuilder class by initializing a context
+    for the widget and preparing a configuration data spec to pass the builder
+    :return:
+        tuple of
+            [0] the configuration data to pass DropDownBuilder
+            [1] the window as returned by setup_test_builder
+            [2] the RandomStringGenerator as returned by setup_test_builder
+    """
+    entry_config = setup_test_builder[0]
+
+    entry_config[KEYS["type_key"]] = "drop_down"
+    return (entry_config, setup_test_builder[1], setup_test_builder[2])
+
+def test_dropdownbuilder(setup_test_dropdownbuilder):
+    """Pass random property key-value pairs into the DropDownBuilder.__call__
+    method in the properties keyword argument
+    :param setup_test_dropdownbuilder:
+        the fixture instance to do this test with
+    """
+    for i in range(MAX_FUZZED_VALUES):
+        random_key = setup_test_dropdownbuilder[2].get_random_str(length=10)
+        random_value = setup_test_dropdownbuilder[2].get_random_str(length=10)
+
+        setup_test_dropdownbuilder[0][KEYS["properties_key"]][
+            random_key] = random_value
+    # Put a bunch of random properties in the DropDownBuilder's input
+
+    setup_test_dropdownbuilder[0][KEYS["properties_key"]][
+        KEYS["action_key"]] = None
+    # Set action to None
+
+    suipy_framework.DropDownBuilder()(
+        **setup_test_dropdownbuilder[0],
+        parent=setup_test_dropdownbuilder[1],
+        current_row=0,
+        current_column=0,
+        **SIMPLE_ACTIONS,
+        **KEYS)
+    # Call the builder with that data.
+    # If there's an exception, the test fails.
