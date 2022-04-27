@@ -492,16 +492,23 @@ class RandomStringGenerator:
 # Tests for TextLineBuilder
 #------------------------------------------------------------------------------
 @pytest.fixture
-def setup_test_textlinebuilder():
+def setup_test_builder():
     window_fixture = tkinter.Tk()
     fuzzer = RandomStringGenerator()
     base_config = {
-        KEYS["type_key"]: "text",
+        KEYS["type_key"]: "some_type",
         KEYS["name_key"]: "random_widget",
         KEYS["properties_key"]: {},
         KEYS["children_key"]: []
     }
     return (base_config, window_fixture, fuzzer)
+
+@pytest.fixture
+def setup_test_textlinebuilder(setup_test_builder):
+    base_config = setup_test_builder[0]
+
+    base_config[KEYS["type_key"]] = "text_line"
+    return (base_config, setup_test_builder[1], setup_test_builder[2])
 
 def test_textlinebuilder(setup_test_textlinebuilder):
     widget_config = setup_test_textlinebuilder[0]
