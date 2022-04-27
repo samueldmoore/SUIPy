@@ -493,6 +493,16 @@ class RandomStringGenerator:
 #------------------------------------------------------------------------------
 @pytest.fixture
 def setup_test_builder():
+    """Do some setup needed for multiple builder tests to follow: prepare a
+    parent window, seed the fuzzer, and set up a base configuration to modify
+    :return:
+        tuple containing
+            [0] the configuration for a generic widget to be modified as
+            needed
+            [1] an initialized (but not open) window widget to pass a parent
+            [2] an instance of RandomStringGenerator to use to get random
+            input
+    """
     window_fixture = tkinter.Tk()
     fuzzer = RandomStringGenerator()
     base_config = {
@@ -505,12 +515,25 @@ def setup_test_builder():
 
 @pytest.fixture
 def setup_test_textlinebuilder(setup_test_builder):
-    base_config = setup_test_builder[0]
+    """Prepare to test the TextLineBuilder class by initializing a context
+    for the widget and preparing a configuration data spec to pass the builder
+    :return:
+        tuple of
+            [0] the configuration data to pass TextLineBuilder
+            [1] the window as returned by setup_test_builder
+            [2] the RandomStringGenerator as returned by setup_test_builder
+    """
+    text_line_config = setup_test_builder[0]
 
-    base_config[KEYS["type_key"]] = "text_line"
-    return (base_config, setup_test_builder[1], setup_test_builder[2])
+    text_line_config[KEYS["type_key"]] = "text_line"
+    return (text_line_config, setup_test_builder[1], setup_test_builder[2])
 
 def test_textlinebuilder(setup_test_textlinebuilder):
+    """Pass random property key-value pairs into the TextLineBuilder.__call__
+    method in the properties keyword argument
+    :param setup_test_textlinebuilder:
+        the fixture instance to do this test with
+    """
     widget_config = setup_test_textlinebuilder[0]
     builder_fixture = suipy_framework.TextLineBuilder()
 
@@ -530,3 +553,7 @@ def test_textlinebuilder(setup_test_textlinebuilder):
         **KEYS)
     # Call the builder with that data.
     # If there's an exception, the test fails.
+
+#------------------------------------------------------------------------------
+# Tests for TextLineBuilder
+#------------------------------------------------------------------------------
