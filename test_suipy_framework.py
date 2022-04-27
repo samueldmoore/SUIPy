@@ -691,3 +691,46 @@ def test_dropdownbuilder(setup_test_dropdownbuilder):
         **KEYS)
     # Call the builder with that data.
     # If there's an exception, the test fails.
+
+#------------------------------------------------------------------------------
+# Tests for FrameBuilder
+#------------------------------------------------------------------------------
+
+@pytest.fixture
+def setup_test_framebuilder(setup_test_builder):
+    """Prepare to test the FrameBuilder class by initializing a context
+    for the widget and preparing a configuration data spec to pass the builder
+    :return:
+        tuple of
+            [0] the configuration data to pass FrameBuilder
+            [1] the window as returned by setup_test_builder
+            [2] the RandomStringGenerator as returned by setup_test_builder
+    """
+    entry_config = setup_test_builder[0]
+
+    entry_config[KEYS["type_key"]] = "frame"
+    return (entry_config, setup_test_builder[1], setup_test_builder[2])
+
+def test_framebuilder(setup_test_framebuilder):
+    """Pass random property key-value pairs into the FrameBuilder.__call__
+    method in the properties keyword argument
+    :param setup_test_framebuilder:
+        the fixture instance to do this test with
+    """
+    for i in range(MAX_FUZZED_VALUES):
+        random_key = setup_test_framebuilder[2].get_random_str(length=10)
+        random_value = setup_test_framebuilder[2].get_random_str(length=10)
+
+        setup_test_framebuilder[0][KEYS["properties_key"]][
+            random_key] = random_value
+    # Put a bunch of random properties in the FrameBuilder's input
+
+    suipy_framework.FrameBuilder()(
+        **setup_test_framebuilder[0],
+        parent=setup_test_framebuilder[1],
+        current_row=0,
+        current_column=0,
+        **SIMPLE_ACTIONS,
+        **KEYS)
+    # Call the builder with that data.
+    # If there's an exception, the test fails.
