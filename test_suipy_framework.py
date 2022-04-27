@@ -6,7 +6,7 @@ logic criteria like correlated active clause coverage.
 
 """
 
-import suipy_framework, pytest, unittest.mock
+import suipy_framework, pytest, unittest.mock, random
 
 # ============================================================================
 # Hard-coded test fixture key-class mappings to avoid file I/O
@@ -116,6 +116,8 @@ SIMPLE_ACTIONS = {
 
 MOCK_TYPE = "mock_type"
 # This made-up type is used in config_GUIFactory_build_element.
+
+CHAR_CODE_RANGE = (0, 1114111)
 
 def test_initialization():
 
@@ -436,3 +438,27 @@ def test_GUIFactory_create(setup_test_GUIFactory_create):
     for args_for_builder in setup_test_GUIFactory_create[1]:
         args_for_builder[1].assert_called_once_with(**args_for_builder[0])
 
+#==============================================================================
+# Fuzzing Tests
+#------------------------------------------------------------------------------
+class RandomStringGenerator:
+    def __init__(self, randomness_seed=1234567890):
+        random.seed(randomness_seed)
+
+    def get_random_char(self, code_point_range=CHAR_CODE_RANGE):
+
+        random_code_point = random.randint(*code_point_range)
+
+        return chr(random_code_point)
+
+    def get_random_str(self, length=2, code_point_range=CHAR_CODE_RANGE):
+        random_string = ""
+
+        for i in range(length):
+            random_string += self.get_random_char(code_point_range)
+
+        return random_string
+
+#------------------------------------------------------------------------------
+# TextLineBuilder
+#------------------------------------------------------------------------------
